@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ApiService } from '@core/api/api.service';
-import { CreateUserRequest, ManagedUser } from '../models/admin-user.model';
+import { CreateUserRequest, ManagedUser } from '@core/models/user-management.model';
 
 /** Scoped to the admin area via providers on the admin parent route. */
 @Injectable()

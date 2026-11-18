@@ -9,8 +9,8 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize, Observable } from 'rxjs';
 
 import { apiErrorMessage } from '@core/api/api-error';
-import { CreateUserForm } from '../../components/create-user-form/create-user-form';
-import { CreateUserRequest, ManagedUser } from '../../models/admin-user.model';
+import { CreateUserRequest, ManagedUser } from '@core/models/user-management.model';
+import { CreateUserForm } from '@shared/components/create-user-form/create-user-form';
 import { AdminUsersService } from '../../services/admin-users.service';
 
 @Component({

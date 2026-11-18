@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { finalize } from 'rxjs';
 
 import { apiErrorMessage } from '@core/api/api-error';
-import { ManagedUser } from '../../models/admin-user.model';
+import { ManagedUser } from '@core/models/user-management.model';
 import { AdminUsersService } from '../../services/admin-users.service';
 
 @Component({

@@ -57,18 +57,16 @@ calls `http://localhost:3000/api` directly, so the proxy is unused unless `apiBa
 back to `/api`. Since that is cross-origin, the backend must allow the frontend origin with
 credentials. Production uses `/api` and should be hosted on the same origin as the API.
 
-### Admin user management
+### User provisioning
 
-The `admin` feature (`/admin`, ADMIN only) wraps these endpoints through a route-scoped
-`AdminUsersService`:
-
-- `GET /api/users` — user list
-- `POST /api/admin/staff` — create a staff account
-- `POST /api/staff/customers` — create a customer account
+- The `admin` feature (`/admin`, ADMIN only) wraps `GET /api/users`, `POST /api/admin/staff` and
+  `POST /api/staff/customers` through a route-scoped `AdminUsersService`.
+- The `staff` feature (`/staff`, ADMIN/STAFF) wraps `POST /api/staff/customers` at
+  `/staff/customers/new` through `StaffCustomersService`.
 
 All calls go through `ApiService`, so cookie credentials and the CSRF header are applied centrally.
-The create-staff and create-customer pages share one form component; the target role comes from
-route data.
+Both create flows reuse `shared/components/create-user-form`; the admin page picks its target role
+from route data.
 
 ### Dependency rules
 

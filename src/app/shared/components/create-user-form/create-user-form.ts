@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CreateUserRequest } from '../../models/admin-user.model';
+import { CreateUserRequest } from '@core/models/user-management.model';
 
 @Component({
   selector: 'app-create-user-form',
