@@ -1,7 +1,20 @@
-<section class="home">
-  <h1>Home</h1>
-  <p>This page is lazy-loaded from <code>features/home</code>.</p>
+<section class="max-w-2xl">
+  <h1 class="text-3xl font-bold">Welcome</h1>
 
-  <button type="button" (click)="home.registerVisit()">Register visit</button>
-  <p>{{ home.summary() }}</p>
+  @if (auth.user(); as user) {
+    <p class="mt-2 text-zinc-600">Signed in as {{ user.email }} ({{ user.role }}).</p>
+
+    <h2 class="mt-6 text-lg font-semibold">Your areas</h2>
+    <ul class="mt-2 space-y-2 text-sm">
+      @if (auth.hasRole(['ADMIN'])) {
+        <li><a class="text-blue-700 underline" routerLink="/admin">Admin</a></li>
+      }
+      @if (auth.hasRole(['ADMIN', 'STAFF'])) {
+        <li><a class="text-blue-700 underline" routerLink="/staff">Staff</a></li>
+      }
+      @if (auth.hasRole(['CUSTOMER'])) {
+        <li><a class="text-blue-700 underline" routerLink="/customer">Customer</a></li>
+      }
+    </ul>
+  }
 </section>

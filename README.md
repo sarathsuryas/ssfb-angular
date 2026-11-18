@@ -13,7 +13,62 @@ src/app/
 └── app.*       # root component, config and route table
 ```
 
-The `home` feature is a working example of the pattern.
+The `home`, `auth`, `admin`, `staff` and `customer` features are working examples of the pattern.
+
+### Styling
+
+Tailwind CSS v4 is enabled through `.postcssrc.json` (`@tailwindcss/postcss`) and
+`@import 'tailwindcss';` in `src/styles.css`. Style components with utility classes directly in
+their templates; customize the theme with `@theme { ... }` in `src/styles.css`. Component schematic
+defaults skip stylesheet generation because styling lives in templates.
+
+### API base URL
+
+`API_BASE_URL` reads `apiBaseUrl` from `src/environments/environment.ts`. Production builds swap in
+`src/environments/environment.production.ts` via `fileReplacements` in `angular.json`. Development
+points directly at `http://localhost:3000/api`; production stays on `/api` for same-origin hosting.
+A cross-origin base URL requires backend CORS with credentials (`Access-Control-Allow-Origin` set to
+the frontend origin and `Access-Control-Allow-Credentials: true`).
+
+### Authentication
+
+The frontend uses the backend's cookie-based sessions; no tokens are stored in browser JavaScript.
+
+- `POST /api/auth/login`, `/refresh`, `/logout`, `GET /me`, `POST /change-password`
+- All success responses are wrapped as `{ data: ... }`; `ApiService` unwraps this automatically.
+- `access_token` and `refresh_token` are httpOnly cookies. `csrf_token` is readable and is echoed
+  in the `X-CSRF-Token` header on every state-changing request by `authInterceptor`.
+- `AuthService` holds the current user in signals and restores the session at bootstrap via
+  `GET /me` (with one refresh attempt). A 401 on any other API call triggers a single-flight
+  refresh and one retry.
+- `provideAppInitializer` makes this happen before the first route renders; failures resolve to an
+  anonymous session so the app still boots when the API is unavailable.
+
+Role routing (frontend guards are UX only — the backend enforces access):
+
+| Role | Area | Backend rights |
+| --- | --- | --- |
+| `ADMIN` | `/admin` (also `/staff`) | Create staff and customers, list users |
+| `STAFF` | `/staff` | Create customers, list users |
+| `CUSTOMER` | `/customer` | Customer self-service |
+
+`npm start` runs `ng serve --proxy-config proxy.conf.json`. The development environment currently
+calls `http://localhost:3000/api` directly, so the proxy is unused unless `apiBaseUrl` is changed
+back to `/api`. Since that is cross-origin, the backend must allow the frontend origin with
+credentials. Production uses `/api` and should be hosted on the same origin as the API.
+
+### Admin user management
+
+The `admin` feature (`/admin`, ADMIN only) wraps these endpoints through a route-scoped
+`AdminUsersService`:
+
+- `GET /api/users` — user list
+- `POST /api/admin/staff` — create a staff account
+- `POST /api/staff/customers` — create a customer account
+
+All calls go through `ApiService`, so cookie credentials and the CSRF header are applied centrally.
+The create-staff and create-customer pages share one form component; the target role comes from
+route data.
 
 ### Dependency rules
 
@@ -44,11 +99,13 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Development server
 
-To start a local development server, run:
+To start the local development server (backend on port 3000), run:
 
 ```bash
-ng serve
+npm start
 ```
+
+The backend must be running on port 3000 for login and API calls to work.
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 

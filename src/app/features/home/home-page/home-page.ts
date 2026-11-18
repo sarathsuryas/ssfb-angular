@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
-import { HomeService } from '../services/home.service';
+import { AuthService } from '@core/auth/auth.service';
 
 @Component({
   selector: 'app-home-page',
+  imports: [RouterLink],
   templateUrl: './home-page.html',
-  styleUrl: './home-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage {
-  protected readonly home = inject(HomeService);
+  protected readonly auth = inject(AuthService);
 }

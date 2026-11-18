@@ -1,0 +1,19 @@
+<section class="max-w-2xl">
+  <h1 class="text-2xl font-bold">{{ heading }}</h1>
+  <p class="mt-2 text-zinc-600">Provision a new {{ targetRole }} account.</p>
+
+  @if (error(); as message) {
+    <p class="mt-4 rounded bg-red-50 p-3 text-sm text-red-700" role="alert">{{ message }}</p>
+  }
+  @if (created(); as user) {
+    <div class="mt-4 rounded bg-green-50 p-3 text-sm text-green-700" role="status">
+      <p>Created {{ user.email }} as {{ user.role }}.</p>
+      <a class="underline" routerLink="/admin/users">View users</a>
+    </div>
+  }
+
+  <app-create-user-form
+    [submitting]="submitting()"
+    (submitted)="submit($event)"
+  />
+</section>

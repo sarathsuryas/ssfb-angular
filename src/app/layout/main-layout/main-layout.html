@@ -1,11 +1,42 @@
-<div class="layout">
-  <header class="layout__header">
-    <a class="layout__brand" routerLink="/home">SSFB</a>
+<div class="flex min-h-screen flex-col">
+  <header class="flex flex-wrap items-center justify-between gap-4 bg-zinc-100 px-6 py-4">
+    <div class="flex items-center gap-6">
+      <a class="font-bold text-zinc-900 no-underline" routerLink="/home">SSFB</a>
+
+      <nav class="flex gap-4 text-sm">
+        @if (auth.hasRole(['ADMIN'])) {
+          <a routerLink="/admin" routerLinkActive="font-semibold text-zinc-900">Admin</a>
+        }
+        @if (auth.hasRole(['ADMIN', 'STAFF'])) {
+          <a routerLink="/staff" routerLinkActive="font-semibold text-zinc-900">Staff</a>
+        }
+        @if (auth.hasRole(['CUSTOMER'])) {
+          <a routerLink="/customer" routerLinkActive="font-semibold text-zinc-900">Customer</a>
+        }
+      </nav>
+    </div>
+
+    @if (auth.user(); as user) {
+      <div class="flex items-center gap-3 text-sm">
+        <span class="rounded bg-zinc-200 px-2 py-1 text-xs font-semibold">{{ user.role }}</span>
+        <span class="text-zinc-600">{{ user.email }}</span>
+        <a class="underline" routerLink="/change-password">Password</a>
+        <button
+          class="cursor-pointer rounded border border-zinc-300 px-3 py-1 hover:bg-zinc-200"
+          type="button"
+          (click)="logout()"
+        >
+          Sign out
+        </button>
+      </div>
+    }
   </header>
 
-  <main class="layout__content">
+  <main class="flex-1 p-6">
     <router-outlet />
   </main>
 
-  <footer class="layout__footer">Feature-based Angular application</footer>
+  <footer class="bg-zinc-100 px-6 py-4 text-sm text-zinc-600">
+    Feature-based Angular application
+  </footer>
 </div>
